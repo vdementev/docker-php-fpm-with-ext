@@ -1,11 +1,6 @@
 # Docker image with PHP-FPM and some extensions
 
-
-
-## Build local
-`docker build --squash -t dementev/php-fpm-with-ext:latest .`
-
-Enable experimental features by starting dockerd with the --experimental flag or adding "experimental": true to the daemon.json file.
+![Docker Pulls](https://img.shields.io/docker/pulls/dementev/php-fpm-with-ext?style=flat-square) ![Docker Cloud Automated build](https://img.shields.io/docker/cloud/automated/dementev/php-fpm-with-ext?style=flat-square) ![Docker Image Size (tag)](https://img.shields.io/docker/image-size/dementev/php-fpm-with-ext/latest?style=flat-square) 
 
 
 ## Disclaimer
