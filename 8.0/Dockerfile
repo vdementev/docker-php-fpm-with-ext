@@ -40,7 +40,7 @@ RUN apk update && apk add --no-cache \
     exif \
     intl \
 && pecl install \
-    redis-5.3.2 \
+    redis-5.3.4 \
 && docker-php-ext-enable \
     redis \
 && docker-php-source delete \
