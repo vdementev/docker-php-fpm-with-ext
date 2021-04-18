@@ -2,29 +2,30 @@ FROM php:7.4-fpm-alpine
 
 # Install dependencies for our app
 RUN apk update && apk add --no-cache \
-    shadow \
-    nano \
-    zip \
-    libzip-dev \
-    unzip \
-    oniguruma-dev \
-    libmcrypt-dev \
     freetype-dev \
-    libexif-dev \
-    zlib-dev \
-    tiff-dev \
-    libjpeg-turbo-dev \
-    libwebp-dev \
-    libpng-dev \
-    giflib-dev \
-    imagemagick \
     gd \
+    giflib-dev \
+    gifsicle \
+    # icu-dev \
+    imagemagick \
     jpegoptim \
+    libexif-dev \
+    libjpeg-turbo-dev \
+    libmcrypt-dev \
+    libpng-dev \
+    libwebp-dev \
+    libzip-dev \
+    mysql-client \
+    nano \
+    oniguruma-dev \
     optipng \
     pngquant \
-    gifsicle \
-    mysql-client \
-    icu-dev \
+    shadow \
+    tiff-dev \
+    tzdata \
+    unzip \
+    zip \
+    zlib-dev \
     $PHPIZE_DEPS \
 && docker-php-ext-configure \
     gd --with-freetype=/usr/include/ \
