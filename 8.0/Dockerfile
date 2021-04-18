@@ -6,7 +6,7 @@ RUN apk update && apk add --no-cache \
     gd \
     giflib-dev \
     gifsicle \
-    # icu-dev \
+    icu-dev \
     imagemagick \
     jpegoptim \
     libexif-dev \
