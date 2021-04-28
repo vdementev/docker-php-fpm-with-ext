@@ -1,4 +1,4 @@
-FROM php:8.0-fpm-alpine AS builder
+FROM php:8.0-fpm-alpine
 # Installed PHP Modules:
 #     Core
 #     ctype
@@ -38,6 +38,7 @@ FROM php:8.0-fpm-alpine AS builder
 RUN apk update && apk add --no-cache \
     tzdata \
     nano \
+    shadow \
     && rm -rf /var/cache/apk/*
 
 # Add some PHP extensions
