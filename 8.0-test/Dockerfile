@@ -50,4 +50,5 @@ RUN install-php-extensions \
     mcrypt \
     opcache \
     redis \
-    zip
+    zip \
+    pdo_mysql
