@@ -47,14 +47,17 @@ RUN apk update && apk add --no-cache \
 COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/local/bin/
 RUN install-php-extensions \
     bz2 \
+    dom\
     exif \
+    fileinfo \
     gd \
+    iconv \
     mcrypt \
     opcache \
-    redis \
-    zip \
     pdo_mysql \
-    libxml \
+    redis \
     simplexml \
-    fileinfo \
-    dom
+    xml \
+    xmlreader \
+    zip \
+    zlib
