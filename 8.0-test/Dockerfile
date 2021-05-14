@@ -39,6 +39,8 @@ RUN apk update && apk add --no-cache \
     tzdata \
     nano \
     shadow \
+    curl \
+    mysql-client \
     && rm -rf /var/cache/apk/*
 
 # Add some PHP extensions
@@ -51,4 +53,8 @@ RUN install-php-extensions \
     opcache \
     redis \
     zip \
-    pdo_mysql
+    pdo_mysql \
+    libxml \
+    simplexml \
+    fileinfo \
+    dom
