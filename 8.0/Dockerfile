@@ -1,48 +1,63 @@
 FROM php:8.0-fpm-alpine
+# Installed PHP Modules:
+#     Core
+#     ctype
+#     curl
+#     date
+#     dom
+#     fileinfo
+#     filter
+#     ftp
+#     hash
+#     iconv
+#     json
+#     libxml
+#     mbstring
+#     mysqlnd
+#     openssl
+#     pcre
+#     PDO
+#     pdo_sqlite
+#     Phar
+#     posix
+#     readline
+#     Reflection
+#     session
+#     SimpleXML
+#     sodium
+#     SPL
+#     sqlite3
+#     standard
+#     tokenizer
+#     xml
+#     xmlreader
+#     xmlwriter
+#     zlib
 
-# Install dependencies for our app
+# Add some system packages
 RUN apk update && apk add --no-cache \
-    freetype-dev \
-    gd \
-    giflib-dev \
-    gifsicle \
-    icu-dev \
-    imagemagick \
-    jpegoptim \
-    libexif-dev \
-    libjpeg-turbo-dev \
-    libmcrypt-dev \
-    libpng-dev \
-    libwebp-dev \
-    libzip-dev \
-    mysql-client \
-    nano \
-    oniguruma-dev \
-    optipng \
-    pngquant \
-    shadow \
-    tiff-dev \
     tzdata \
-    unzip \
-    zip \
-    zlib-dev \
-    $PHPIZE_DEPS \
-&& docker-php-ext-configure \
-    gd --with-freetype=/usr/include/ \
-       --with-jpeg=/usr/include/ \
-&& docker-php-ext-configure intl \
-&& docker-php-ext-install \
-    pdo_mysql \
-    opcache \
-    bcmath \
-    pcntl \
-    gd \
-    zip \
+    nano \
+    shadow \
+    curl \
+    mysql-client \
+    && rm -rf /var/cache/apk/*
+
+# Add some PHP extensions
+COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/local/bin/
+RUN install-php-extensions \
+    bz2 \
+    dom\
     exif \
-    intl \
-&& pecl install \
-    redis-5.3.4 \
-&& docker-php-ext-enable \
+    fileinfo \
+    gd \
+    iconv \
+    mcrypt \
+    opcache \
+    pdo_mysql \
     redis \
-&& docker-php-source delete \
-&& rm -rf /var/cache/apk/*
+    simplexml \
+    xml \
+    xmlreader \
+    zip \
+    zlib
