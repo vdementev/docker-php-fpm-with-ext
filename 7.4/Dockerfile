@@ -18,9 +18,11 @@ RUN IPE_LZF_BETTERCOMPRESSION=1 install-php-extensions \
     gd \
     imagick \
     imap \
+    intl \
     lzf \
     mcrypt \
     opcache \
+    pcntl \
     pdo_mysql \
     redis \
     zip
@@ -48,6 +50,7 @@ RUN IPE_LZF_BETTERCOMPRESSION=1 install-php-extensions \
 # iconv
 # imagick
 # imap
+# intl
 # json
 # libxml
 # lzf
@@ -55,6 +58,7 @@ RUN IPE_LZF_BETTERCOMPRESSION=1 install-php-extensions \
 # mcrypt
 # mysqlnd
 # openssl
+# pcntl
 # pcre
 # PDO
 # pdo_mysql
