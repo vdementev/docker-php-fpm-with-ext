@@ -5,3 +5,5 @@
 
 ## Disclaimer
 I made this Docker image for myself, so I have not tested it in use cases that I do not use myself.
+
+By default high values for execution time and memoru usage are used. To change them put ini file with needed configuration in /usr/local/etc/php/conf.d/99-php.ini
