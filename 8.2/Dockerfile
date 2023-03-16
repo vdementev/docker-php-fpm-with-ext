@@ -8,7 +8,9 @@ RUN apk update && apk add --no-cache \
     imagemagick \
     mysql-client \
     nano \
-    && rm -rf /var/cache/apk/*
+    && rm -rf /var/cache/apk/ \
+    && rm -rf /root/.cache \
+    && rm -rf /tmp/*
 
 # Add some PHP extensions
 COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/local/bin/
