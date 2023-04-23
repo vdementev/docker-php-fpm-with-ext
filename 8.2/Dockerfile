@@ -32,6 +32,7 @@ RUN IPE_LZF_BETTERCOMPRESSION=1 install-php-extensions \
     pcntl \
     pdo_mysql \
     redis \
+    soap \
     tidy \
     uploadprogress \
     zip
