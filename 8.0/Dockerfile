@@ -15,6 +15,7 @@ RUN apk update && apk add --no-cache \
 # Add some PHP extensions
 COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/local/bin/
 RUN IPE_LZF_BETTERCOMPRESSION=1 install-php-extensions \
+    apcu \
     bcmath \
     bz2 \
     exif \
