@@ -34,7 +34,7 @@ RUN IPE_LZF_BETTERCOMPRESSION=1 install-php-extensions \
     redis \
     soap \
     tidy \
-    uploadprogress \
+    # uploadprogress \
     zip
 
 COPY ./php.ini /usr/local/etc/php/conf.d/01-php.ini
