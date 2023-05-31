@@ -30,7 +30,7 @@ RUN IPE_LZF_BETTERCOMPRESSION=1 install-php-extensions \
     oauth \
     opcache \
     pcntl \
-    # pdo_mysql \
+    pdo_mysql \
     redis \
     soap \
     tidy \
