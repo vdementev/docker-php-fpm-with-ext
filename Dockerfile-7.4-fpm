@@ -1,0 +1,46 @@
+FROM php:7.4-fpm-alpine
+
+# Add some system packages
+RUN apk update && apk add --no-cache \
+    brotli \
+    curl \
+    ghostscript \
+    imagemagick \
+    mysql-client \
+    nano \
+    && rm -rf /var/cache/apk/ \
+    && rm -rf /root/.cache \
+    && rm -rf /tmp/*
+
+# Add some PHP extensions
+COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/local/bin/
+RUN IPE_LZF_BETTERCOMPRESSION=1 install-php-extensions \
+    bcmath \
+    bz2 \
+    exif \
+    gd \
+    imagick \
+    imap \
+    intl \
+    lz4 \
+    lzf \
+    mcrypt \
+    memcached \
+    # mysqli \
+    oauth \
+    opcache \
+    pcntl \
+    pdo_mysql \
+    redis \
+    soap \
+    tidy \
+    # uploadprogress \
+    zip
+
+COPY ./conf/php.ini /usr/local/etc/php/conf.d/01-php.ini
+COPY ./conf/www.conf /usr/local/etc/php-fpm.d/www.conf
+
+WORKDIR /app
+
+# List of supported extensions available here:
+# https://github.com/mlocati/docker-php-extension-installer#readme

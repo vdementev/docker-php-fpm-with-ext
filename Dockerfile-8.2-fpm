@@ -26,7 +26,7 @@ RUN IPE_LZF_BETTERCOMPRESSION=1 install-php-extensions \
     lzf \
     mcrypt \
     memcached \
-    mysqli \
+    # mysqli \
     oauth \
     opcache \
     pcntl \
@@ -37,8 +37,8 @@ RUN IPE_LZF_BETTERCOMPRESSION=1 install-php-extensions \
     # uploadprogress \
     zip
 
-COPY ./php.ini /usr/local/etc/php/conf.d/01-php.ini
-COPY ./www.conf /usr/local/etc/php-fpm.d/www.conf
+COPY ./conf/php.ini /usr/local/etc/php/conf.d/01-php.ini
+COPY ./conf/www.conf /usr/local/etc/php-fpm.d/www.conf
 
 WORKDIR /app
 
