@@ -43,5 +43,7 @@ COPY ./conf/www.conf /usr/local/etc/php-fpm.d/www.conf
 
 WORKDIR /app
 
+EXPOSE 9000 9001 9003
+
 # List of supported extensions available here:
 # https://github.com/mlocati/docker-php-extension-installer#readme
