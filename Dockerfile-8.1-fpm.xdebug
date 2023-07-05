@@ -24,6 +24,7 @@ RUN IPE_LZF_BETTERCOMPRESSION=1 install-php-extensions \
     intl \
     lz4 \
     lzf \
+    mariadb-connector-c \
     mcrypt \
     memcached \
     mysqli \
