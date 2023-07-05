@@ -6,6 +6,7 @@ RUN apk update && apk add --no-cache \
     curl \
     ghostscript \
     imagemagick \
+    mariadb-connector-c \
     mysql-client \
     nano \
     && rm -rf /var/cache/apk/ \
@@ -24,7 +25,6 @@ RUN IPE_LZF_BETTERCOMPRESSION=1 install-php-extensions \
     intl \
     lz4 \
     lzf \
-    mariadb-connector-c \
     mcrypt \
     memcached \
     mysqli \
