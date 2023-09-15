@@ -2,7 +2,6 @@ FROM php:8.1-fpm-alpine3.18
 
 # Add some system packages
 RUN apk update && apk add --no-cache \
-    brotli \
     curl \
     ghostscript \
     imagemagick \
@@ -15,17 +14,13 @@ RUN apk update && apk add --no-cache \
 
 # Add some PHP extensions
 COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/local/bin/
-RUN IPE_LZF_BETTERCOMPRESSION=1 install-php-extensions \
-    apcu \
+RUN install-php-extensions \
     bcmath \
-    bz2 \
     exif \
     gd \
     imagick \
     imap \
     intl \
-    lz4 \
-    lzf \
     mcrypt \
     memcached \
     mysqli \
@@ -35,16 +30,12 @@ RUN IPE_LZF_BETTERCOMPRESSION=1 install-php-extensions \
     pdo_mysql \
     redis \
     soap \
-    tidy \
-    uploadprogress \
     zip
 
 COPY ./conf/php.ini /usr/local/etc/php/conf.d/01-php.ini
 COPY ./conf/www.conf /usr/local/etc/php-fpm.d/www.conf
 
 WORKDIR /app
-
-EXPOSE 9000 9001
 
 # List of supported extensions available here:
 # https://github.com/mlocati/docker-php-extension-installer#readme
