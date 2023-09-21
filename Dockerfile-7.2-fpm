@@ -5,7 +5,6 @@ RUN apk update && apk add --no-cache \
     curl \
     ghostscript \
     imagemagick \
-    mariadb-connector-c \
     mysql-client \
     nano \
     && rm -rf /var/cache/apk/ \
