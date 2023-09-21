@@ -3,7 +3,6 @@ FROM php:7.0-fpm-alpine
 # Add some system packages
 RUN apk update && apk add --no-cache \
     curl \
-    ghostscript \
     imagemagick \
     mysql-client \
     nano \
@@ -21,13 +20,9 @@ RUN install-php-extensions \
     imap \
     intl \
     mcrypt \
-    memcached \
     mysqli \
-    oauth \
-    opcache \
     pcntl \
     pdo_mysql \
-    redis \
     soap \
     zip
 
