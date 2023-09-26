@@ -8,6 +8,7 @@ RUN apk update && apk add --no-cache \
     mariadb-connector-c \
     mysql-client \
     nano \
+    zstd \
     && rm -rf /var/cache/apk/ \
     && rm -rf /root/.cache \
     && rm -rf /tmp/*
@@ -24,7 +25,6 @@ RUN install-php-extensions \
     mcrypt \
     memcached \
     mysqli \
-    oauth \
     opcache \
     pcntl \
     pdo_mysql \
