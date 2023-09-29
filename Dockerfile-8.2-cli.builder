@@ -5,11 +5,12 @@ RUN apk update && apk add --no-cache \
     7zip \
     brotli \
     curl \
+    git \
     imagemagick \
     mariadb-connector-c \
     mysql-client \
     nano \
-    nodejs \
+    nodejs \ 
     npm \
     zip \
     zstd \

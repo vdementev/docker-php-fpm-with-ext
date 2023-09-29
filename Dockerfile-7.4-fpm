@@ -3,14 +3,12 @@ FROM php:7.4-fpm-alpine
 # Add some system packages
 RUN apk update && apk add --no-cache \
     curl \
-    ghostscript \
     imagemagick \
     mariadb-connector-c \
     mysql-client \
     nano \
     zip \
     zstd \
-    brotli \
     && rm -rf /var/cache/apk/ \
     && rm -rf /root/.cache \
     && rm -rf /tmp/*
