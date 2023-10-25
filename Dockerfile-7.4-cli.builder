@@ -2,7 +2,6 @@ FROM php:7.4-fpm-alpine
 
 # Add some system packages
 RUN apk update && apk add --no-cache \
-    7zip \
     brotli \
     curl \
     git \
