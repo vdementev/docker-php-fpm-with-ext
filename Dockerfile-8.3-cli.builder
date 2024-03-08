@@ -1,12 +1,17 @@
-FROM php:8.0-fpm-alpine3.16
+FROM php:8.3-cli-alpine3.19
 
 # Add some system packages
 RUN apk update && apk add --no-cache \
+    7zip \
+    brotli \
     curl \
+    git \
     imagemagick \
     mariadb-connector-c \
     mysql-client \
     nano \
+    nodejs \ 
+    npm \
     zip \
     zstd \
     && rm -rf /var/cache/apk/ \
@@ -32,10 +37,8 @@ RUN install-php-extensions \
     soap \
     zip
 
-COPY ./conf/php.ini /usr/local/etc/php/conf.d/01-php.ini
-COPY ./conf/www.conf /usr/local/etc/php-fpm.d/www.conf
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+RUN node -v && npm install -g npx
+RUN npm install -g semantic-release
 
 WORKDIR /app
-
-# List of supported extensions available here:
-# https://github.com/mlocati/docker-php-extension-installer#readme
