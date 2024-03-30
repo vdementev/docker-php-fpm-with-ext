@@ -24,7 +24,7 @@ RUN install-php-extensions \
     bcmath \
     exif \
     gd \
-    imagick \
+#    imagick \
     imap \
     intl \
     mcrypt \
