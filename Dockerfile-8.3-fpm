@@ -20,9 +20,10 @@ RUN install-php-extensions \
     pcntl \
     pdo_mysql \
     redis \
+    soap \
     zip \
     zstd
-    
+
 COPY ./conf/php.ini /usr/local/etc/php/conf.d/01-php.ini
 COPY ./conf/www.conf /usr/local/etc/php-fpm.d/www.conf
 

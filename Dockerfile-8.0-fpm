@@ -20,6 +20,7 @@ RUN install-php-extensions \
     pcntl \
     pdo_mysql \
     redis \
+    soap \
     zip \
     zstd
 
