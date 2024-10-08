@@ -19,6 +19,7 @@ COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr
 RUN install-php-extensions \
     exif \
     gd \
+    Igbinary \
     intl \
     memcached \
     mysqli \
@@ -27,6 +28,7 @@ RUN install-php-extensions \
     pdo_mysql \
     redis \
     soap \
+    timezonedb \
     zip \
     zstd
 
