@@ -15,7 +15,9 @@ RUN install-php-extensions \
     exif \
     gd \
     intl \
+    mcrypt \
     memcached \
+    mysqli \
     opcache \
     pcntl \
     pdo_mysql \

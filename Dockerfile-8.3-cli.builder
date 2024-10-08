@@ -21,6 +21,7 @@ RUN install-php-extensions \
     gd \
     intl \
     memcached \
+    mysqli \
     opcache \
     pcntl \
     pdo_mysql \
