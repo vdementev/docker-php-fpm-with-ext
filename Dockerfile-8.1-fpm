@@ -3,34 +3,25 @@ FROM php:8.1-fpm-alpine3.20
 # Add some system packages
 RUN apk update && apk add --no-cache \
     curl \
-    imagemagick \
     mariadb-connector-c \
     mysql-client \
     nano \
     zip \
-    zstd \
-    && rm -rf /var/cache/apk/ \
-    && rm -rf /root/.cache \
-    && rm -rf /tmp/*
+    zstd
 
 # Add some PHP extensions
 COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/local/bin/
 RUN install-php-extensions \
-    bcmath \
     exif \
     gd \
-    imagick \
-    imap \
     intl \
-    mcrypt \
     memcached \
-    mysqli \
     opcache \
     pcntl \
     pdo_mysql \
     redis \
-    soap \
-    zip
+    zip \
+    zstd
 
 COPY ./conf/php.ini /usr/local/etc/php/conf.d/01-php.ini
 COPY ./conf/www.conf /usr/local/etc/php-fpm.d/www.conf
