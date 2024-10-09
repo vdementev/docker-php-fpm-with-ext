@@ -2,12 +2,10 @@ FROM php:7.4-cli-alpine3.16
 
 # Add some system packages
 RUN apk update && apk add --no-cache \
-    7zip \
     brotli \
     curl \
     git \
     mariadb-connector-c \
-    mysql-client \
     nano \
     nodejs \ 
     npm \
