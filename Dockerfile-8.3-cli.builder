@@ -32,6 +32,9 @@ RUN install-php-extensions \
     zip \
     zstd
 
+COPY ./conf/php.ini /usr/local/etc/php/conf.d/01-php.ini
+COPY ./conf/www.conf /usr/local/etc/php-fpm.d/www.conf
+
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 RUN node -v && npm install -g npx
 RUN npm install -g semantic-release
