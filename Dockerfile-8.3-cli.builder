@@ -5,6 +5,7 @@ RUN apk update && apk add --no-cache \
     7zip \
     brotli \
     curl \
+    jq \
     git \
     mariadb-connector-c \
     mysql-client \
