@@ -1,11 +1,12 @@
 FROM php:7.4-cli-alpine3.16
 
 # Add some system packages
-RUN apk update && apk add --no-cache \
+RUN apk update && apk upgrade --no-interactive && apk add \
+    7zip \
     brotli \
     curl \
-    jq \
     git \
+    jq \
     mariadb-connector-c \
     nano \
     nodejs \ 
@@ -31,6 +32,8 @@ RUN install-php-extensions \
     timezonedb \
     zip \
     zstd
+
+RUN rm -rf /var/cache/apk/*
 
 COPY ./conf/php7.ini /usr/local/etc/php/conf.d/01-php.ini
 COPY ./conf/www.conf /usr/local/etc/php-fpm.d/www.conf

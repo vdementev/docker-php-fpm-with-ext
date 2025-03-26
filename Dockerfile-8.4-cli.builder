@@ -1,14 +1,17 @@
-FROM php:7.4-fpm-alpine3.16
+FROM php:8.4-cli-alpine3.21
 
 # Add some system packages
 RUN apk update && apk upgrade --no-interactive && apk add \
-    busybox \
+    7zip \
+    brotli \
     curl \
-    fcgi \
+    git \
     jq \
     mariadb-connector-c \
     mysql-client \
     nano \
+    nodejs \ 
+    npm \
     zip \
     zstd
 
@@ -19,7 +22,6 @@ RUN install-php-extensions \
     gd \
     Igbinary \
     intl \
-    mcrypt \
     memcached \
     mysqli \
     opcache \
@@ -33,14 +35,11 @@ RUN install-php-extensions \
 
 RUN rm -rf /var/cache/apk/*
 
-COPY ./conf/php7.ini /usr/local/etc/php/conf.d/01-php.ini
+COPY ./conf/php.ini /usr/local/etc/php/conf.d/01-php.ini
 COPY ./conf/www.conf /usr/local/etc/php-fpm.d/www.conf
 
-RUN curl -o /usr/local/bin/php-fpm-healthcheck \
-    https://raw.githubusercontent.com/renatomefi/php-fpm-healthcheck/master/php-fpm-healthcheck \
-    && chmod +x /usr/local/bin/php-fpm-healthcheck
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+RUN node -v && npm install -g npx
+RUN npm install -g semantic-release
 
 WORKDIR /app
-
-# List of supported extensions available here:
-# https://github.com/mlocati/docker-php-extension-installer#readme
