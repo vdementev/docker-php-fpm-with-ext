@@ -1,7 +1,7 @@
 FROM php:7.4-cli-alpine3.16
 
 # Add some system packages
-RUN apk update && apk upgrade --no-interactive && apk add \
+RUN apk update && apk upgrade -q && apk add \
     7zip \
     brotli \
     curl \

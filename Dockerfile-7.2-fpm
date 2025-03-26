@@ -1,7 +1,7 @@
 FROM php:7.2-fpm-alpine
 
 # Add some system packages
-RUN apk update && apk upgrade --no-interactive && apk add \
+RUN apk update && apk upgrade -q && apk add \
     busybox \
     curl \
     fcgi \
