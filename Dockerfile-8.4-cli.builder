@@ -15,7 +15,7 @@ RUN set -eux; \
         nodejs \ 
         npm \
         zip \
-        zstd;
+        zstd; \
     rm -rf /var/cache/apk/*
 
 # Add some PHP extensions
@@ -24,7 +24,7 @@ RUN set -eux; \
     install-php-extensions \
         exif \
         gd \
-        Igbinary \
+        igbinary \
         intl \
         memcached \
         mysqli \

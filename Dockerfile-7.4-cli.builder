@@ -18,7 +18,7 @@ COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr
 RUN install-php-extensions \
     exif \
     gd \
-    Igbinary \
+    igbinary \
     intl \
     mcrypt \
     memcached \
