@@ -2,7 +2,6 @@ FROM php:7.4-cli-alpine3.16
 
 # Add some system packages
 RUN apk update && apk upgrade -q && apk add \
-    7zip \
     brotli \
     curl \
     git \
@@ -41,5 +40,7 @@ COPY ./conf/www.conf /usr/local/etc/php-fpm.d/www.conf
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 RUN node -v && npm install -g npx
 RUN npm install -g semantic-release
+
+USER www-data
 
 WORKDIR /app
