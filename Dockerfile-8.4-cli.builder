@@ -15,7 +15,7 @@ RUN set -eux; \
         nodejs \ 
         npm \
         zip \
-        zstd
+        zstd;
     rm -rf /var/cache/apk/*
 
 # Add some PHP extensions
