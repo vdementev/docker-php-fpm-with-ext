@@ -40,7 +40,7 @@ RUN curl -o /usr/local/bin/php-fpm-healthcheck \
     https://raw.githubusercontent.com/renatomefi/php-fpm-healthcheck/master/php-fpm-healthcheck \
     && chmod +x /usr/local/bin/php-fpm-healthcheck
 
-HEALTHCHECK --interval=5s --timeout=1s --start-period=3s --retries=1 CMD FCGI_CONNECT=/var/run/php-fpm-status.sock php-fpm-healthcheck || exit 1 
+HEALTHCHECK --interval=5s --timeout=1s --start-period=3s --retries=1 CMD php-fpm-healthcheck || exit 1 
 
 USER www-data
 
