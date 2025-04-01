@@ -37,7 +37,7 @@ RUN set -eux; \
         zip \
         zstd
 
-COPY ./conf/php.ini /usr/local/etc/php/conf.d/01-php.ini
+COPY ./conf/php-builder.ini /usr/local/etc/php/conf.d/01-php.ini
 COPY ./conf/www.conf /usr/local/etc/php-fpm.d/www.conf
 
 RUN set -eux; \
