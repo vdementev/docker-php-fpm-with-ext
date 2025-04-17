@@ -39,7 +39,7 @@ RUN set -eux; \
     node -v; \
     npm install -g npx semantic-release
 
-COPY ./conf/php-builder.ini /usr/local/etc/php/conf.d/01-php.ini
+COPY ./conf/php7.ini /usr/local/etc/php/conf.d/01-php.ini
 COPY ./conf/www.conf /usr/local/etc/php-fpm.d/www.conf
 
 USER www-data
