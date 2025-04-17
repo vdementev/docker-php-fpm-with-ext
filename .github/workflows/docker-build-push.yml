@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
 
 env:
-  IMAGE_REPO: ${{ secrets.DOCKERHUB_USERNAME }}/php_ext
+  IMAGE_REPO: ${{ secrets.DOCKERHUB_USERNAME }}/php
 
 jobs:
   build-and-push:
@@ -19,44 +19,47 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          # - dockerfile: Dockerfile.7.1-fpm
-          #   version: "7.1"
-          #   flavor: "fpm"
-          # - dockerfile: Dockerfile.7.2-fpm
-          #   version: "7.2"
-          #   flavor: "fpm"
-          # - dockerfile: Dockerfile.7.3-fpm
-          #   version: "7.3"
-          #   flavor: "fpm"
-          # - dockerfile: Dockerfile.7.4-cli.builder
-          #   version: "7.4"
-          #   flavor: "cli-builder"
-          # - dockerfile: Dockerfile.7.4-fpm
-          #   version: "7.4"
-          #   flavor: "fpm"
-          # - dockerfile: Dockerfile.8.0-fpm
-          #   version: "8.0"
-          #   flavor: "fpm"
-          # - dockerfile: Dockerfile.8.1-fpm
-          #   version: "8.1"
-          #   flavor: "fpm"
-          # - dockerfile: Dockerfile.8.2-fpm
-          #   version: "8.2"
-          #   flavor: "fpm"
-          # - dockerfile: Dockerfile.8.3-cli.builder
-          #   version: "8.3"
-          #   flavor: "cli-builder"
+          - dockerfile: Dockerfile.7.1-fpm
+            version: "7.1"
+            flavor: "fpm"
+          - dockerfile: Dockerfile.7.2-fpm
+            version: "7.2"
+            flavor: "fpm"
+          - dockerfile: Dockerfile.7.3-fpm
+            version: "7.3"
+            flavor: "fpm"
+          - dockerfile: Dockerfile.7.4-cli.builder
+            version: "7.4"
+            flavor: "cli-builder"
+          - dockerfile: Dockerfile.7.4-fpm
+            version: "7.4"
+            flavor: "fpm"
+          - dockerfile: Dockerfile.8.0-fpm
+            version: "8.0"
+            flavor: "fpm"
+          - dockerfile: Dockerfile.8.1-fpm
+            version: "8.1"
+            flavor: "fpm"
+          - dockerfile: Dockerfile.8.2-fpm
+            version: "8.2"
+            flavor: "fpm"
+          - dockerfile: Dockerfile.8.3-cli.builder
+            version: "8.3"
+            flavor: "cli-builder"
           - dockerfile: Dockerfile.8.3-fpm
             version: "8.3"
             flavor: "fpm"
-          # - dockerfile: Dockerfile.8.4-cli.builder
-          #   version: "8.4"
-          #   flavor: "cli-builder"
+          - dockerfile: Dockerfile.8.4-cli.builder
+            version: "8.4"
+            flavor: "cli-builder"
           - dockerfile: Dockerfile.8.4-fpm
             version: "8.4"
             flavor: "fpm"
 
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
       - name: Log in to Docker Hub
         uses: docker/login-action@v3
         with:
@@ -69,15 +72,7 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Validate build configuration
-        uses: docker/build-push-action@v6
-        with:
-          context: .
-          file: ${{ matrix.dockerfile }}
-          platforms: linux/amd64,linux/arm64
-          call: check
-
-      - name: Extract metadata
+      - name: Extract metadata (tags, labels) for Docker
         id: meta
         uses: docker/metadata-action@v5
         with:
@@ -91,8 +86,8 @@ jobs:
           context: .
           file: ${{ matrix.dockerfile }}
           platforms: linux/amd64,linux/arm64
-          sbom: true
           push: true
+          sbom: true
           provenance: mode=max
-          tags: |
-            ${{ env.IMAGE_REPO }}:${{ matrix.version }}-${{ matrix.flavor }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
