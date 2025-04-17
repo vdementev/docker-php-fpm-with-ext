@@ -1,4 +1,4 @@
-name: Build & Push PHP Extension Images
+name: Build & Push Images
 
 on:
   push:
@@ -58,13 +58,10 @@ jobs:
             flavor: "fpm"
 
     steps:
-      # - name: Checkout repository
-      #   uses: actions/checkout@v3
-
       - name: Log in to Docker Hub
         uses: docker/login-action@v3
         with:
-          username: ${{ vars.DOCKERHUB_USERNAME }}
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Set up QEMU
@@ -73,12 +70,27 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
+      - name: Validate build configuration
+        uses: docker/build-push-action@v6
+        with:
+          call: check
+
+      - name: Extract metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.IMAGE_REPO }}
+          tags: |
+            type=raw,value=${{ matrix.version }}-${{ matrix.flavor }}
+
       - name: Build & push ${{ matrix.version }}-${{ matrix.flavor }}
         uses: docker/build-push-action@v6
         with:
           context: .
           file: ${{ matrix.dockerfile }}
           platforms: linux/amd64,linux/arm64
+          sbom: true
           push: true
+          provenance: mode=max
           tags: |
             ${{ env.IMAGE_REPO }}:${{ matrix.version }}-${{ matrix.flavor }}
