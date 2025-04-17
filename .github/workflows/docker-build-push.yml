@@ -9,7 +9,6 @@ on:
   workflow_dispatch:
 
 env:
-  # your Docker Hub repo prefix
   IMAGE_REPO: ${{ secrets.DOCKERHUB_USERNAME }}/php_ext
 
 jobs:
@@ -73,6 +72,9 @@ jobs:
       - name: Validate build configuration
         uses: docker/build-push-action@v6
         with:
+          context: .
+          file: ${{ matrix.dockerfile }}
+          platforms: linux/amd64,linux/arm64
           call: check
 
       - name: Extract metadata
