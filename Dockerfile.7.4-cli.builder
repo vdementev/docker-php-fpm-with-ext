@@ -10,7 +10,6 @@ RUN set -eux; \
     apk add \
     brotli \
     busybox \
-    fcgi \
     git \
     jq \
     mariadb-connector-c \

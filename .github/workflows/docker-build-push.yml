@@ -46,12 +46,18 @@ jobs:
           - dockerfile: Dockerfile.8.3-cli.builder
             version: "8.3"
             flavor: "cli-builder"
+          - dockerfile: Dockerfile.8.3-cli
+            version: "8.3"
+            flavor: "cli"
           - dockerfile: Dockerfile.8.3-fpm
             version: "8.3"
             flavor: "fpm"
           - dockerfile: Dockerfile.8.4-cli.builder
             version: "8.4"
             flavor: "cli-builder"
+          - dockerfile: Dockerfile.8.4-cli
+            version: "8.4"
+            flavor: "cli"
           - dockerfile: Dockerfile.8.4-fpm
             version: "8.4"
             flavor: "fpm"

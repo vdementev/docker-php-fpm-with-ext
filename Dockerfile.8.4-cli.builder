@@ -10,7 +10,6 @@ RUN set -eux; \
     apk add \
     brotli \
     busybox \
-    fcgi \
     git \
     jq \
     mariadb-connector-c \
@@ -40,7 +39,6 @@ RUN set -eux; \
     npm install -g npx semantic-release
 
 COPY ./conf/php-builder.ini /usr/local/etc/php/conf.d/01-php.ini
-COPY ./conf/www.conf /usr/local/etc/php-fpm.d/www.conf
 
 USER www-data
 
