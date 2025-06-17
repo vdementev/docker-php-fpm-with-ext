@@ -30,7 +30,9 @@ RUN set -eux; \
     pcntl \
     pdo_mysql \
     redis \
+    session \
     soap \
+    tokenizer \
     zip \
     zstd; \
     rm -rf /var/cache/apk/*; \
