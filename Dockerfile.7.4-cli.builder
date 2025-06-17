@@ -17,6 +17,7 @@ RUN set -eux; \
     nano \
     nodejs \ 
     npm \
+    sqlite \
     zip \
     zstd; \
     install-php-extensions \
@@ -29,6 +30,7 @@ RUN set -eux; \
     opcache \
     pcntl \
     pdo_mysql \
+    pdo_sqlite \
     redis \
     session \
     soap \
@@ -46,3 +48,5 @@ COPY ./conf/www.conf /usr/local/etc/php-fpm.d/www.conf
 USER www-data
 
 WORKDIR /app
+
+CMD ["sh"]
