@@ -3,11 +3,11 @@ name: Build & Push Images
 on:
   push:
     branches: [main]
-    paths:
-      - "Dockerfile.*"
-      - ".github/workflows/**"
-      - "conf/**"
-      - "Readme.md"
+    # paths:
+    #   - "Dockerfile.*"
+    #   - ".github/workflows/**"
+    #   - "conf/**"
+    #   - "Readme.md"
   workflow_dispatch:
 
 env:
