@@ -5,5 +5,3 @@ This repository provides Docker images for PHP-FPM that come with a set of commo
 
 ## Disclaimer
 I created this Docker image for my personal use, so it hasn't been tested for use cases outside of my own. To override necessary settings, place an .ini file with your desired configuration at /usr/local/etc/php/conf.d/99-php.ini.
-
-bump
