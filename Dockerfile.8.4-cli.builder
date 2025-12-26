@@ -1,4 +1,4 @@
-FROM php:8.4-cli-alpine3.22
+FROM php:8.4-cli-alpine3.23
 
 # Add some packages
 RUN set -eux; \

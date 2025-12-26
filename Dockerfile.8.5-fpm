@@ -1,4 +1,4 @@
-FROM php:8.3-cli-alpine3.23
+FROM php:8.5-fpm-alpine3.23
 
 # Add some packages
 RUN set -eux; \
@@ -8,16 +8,12 @@ RUN set -eux; \
     https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions; \
     chmod +x /usr/local/bin/install-php-extensions; \
     apk add \
-    brotli \
     busybox \
-    git \
+    fcgi \
     jq \
     mariadb-connector-c \
     mysql-client \
     nano \
-    nodejs \ 
-    npm \
-    sqlite \
     zip \
     zstd; \
     install-php-extensions \
@@ -30,22 +26,27 @@ RUN set -eux; \
     opcache \
     pcntl \
     pdo_mysql \
-    pdo_sqlite \
     redis \
     session \
     soap \
     tokenizer \
     zip \
     zstd; \
-    rm -rf /var/cache/apk/*; \
-    curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer; \
-    node -v; \
-    npm install -g npx semantic-release
+    rm -rf /var/cache/apk/*
 
-COPY ./conf/php-builder.ini /usr/local/etc/php/conf.d/01-php.ini
+COPY ./conf/php.ini /usr/local/etc/php/conf.d/01-php.ini
+COPY ./conf/www.conf /usr/local/etc/php-fpm.d/www.conf
+
+RUN set -eux; \
+    curl -o /usr/local/bin/php-fpm-healthcheck \
+    https://raw.githubusercontent.com/renatomefi/php-fpm-healthcheck/master/php-fpm-healthcheck; \
+    chmod +x /usr/local/bin/php-fpm-healthcheck
+
+HEALTHCHECK --interval=5s --timeout=1s --start-period=3s --retries=1 CMD php-fpm-healthcheck || exit 1 
 
 USER www-data
 
 WORKDIR /app
 
-CMD ["sh"]
+# List of supported extensions available here:
+# https://github.com/mlocati/docker-php-extension-installer#readme
