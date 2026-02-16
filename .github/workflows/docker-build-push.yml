@@ -21,6 +21,9 @@ jobs:
       fail-fast: false
       matrix:
         include:
+          - dockerfile: Dockerfile.7.0-fpm
+            version: "7.0"
+            flavor: "fpm"
           - dockerfile: Dockerfile.7.1-fpm
             version: "7.1"
             flavor: "fpm"
@@ -62,6 +65,15 @@ jobs:
             flavor: "cli"
           - dockerfile: Dockerfile.8.4-fpm
             version: "8.4"
+            flavor: "fpm"
+          - dockerfile: Dockerfile.8.5-cli.builder
+            version: "8.5"
+            flavor: "cli-builder"
+          - dockerfile: Dockerfile.8.5-cli
+            version: "8.5"
+            flavor: "cli"
+          - dockerfile: Dockerfile.8.5-fpm
+            version: "8.5"
             flavor: "fpm"
 
     steps:
