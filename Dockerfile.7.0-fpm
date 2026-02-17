@@ -11,7 +11,6 @@ RUN set -eux; \
     busybox \
     fcgi \
     jq \
-    mariadb-connector-c \
     mysql-client \
     nano \
     zip \
