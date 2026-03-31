@@ -2,20 +2,18 @@ FROM php:7.4-cli-alpine3.16
 
 # Add some packages
 RUN set -eux; \
-    apk update; \
-    apk upgrade -q; \
+    apk upgrade --no-cache -q; \
     curl -sSLf -o /usr/local/bin/install-php-extensions \
     https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions; \
     chmod +x /usr/local/bin/install-php-extensions; \
-    apk add \
+    apk add --no-cache \
     brotli \
-    busybox \
     git \
     jq \
     mariadb-connector-c \
     mysql-client \
     nano \
-    nodejs \ 
+    nodejs \
     npm \
     sqlite \
     zip \
@@ -32,12 +30,10 @@ RUN set -eux; \
     pdo_mysql \
     pdo_sqlite \
     redis \
-    session \
     soap \
-    tokenizer \
     zip \
     zstd; \
-    rm -rf /var/cache/apk/*; \
+    rm /usr/local/bin/install-php-extensions; \
     curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer; \
     node -v; \
     npm install -g npx semantic-release
