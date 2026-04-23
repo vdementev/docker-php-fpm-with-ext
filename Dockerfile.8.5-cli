@@ -7,22 +7,25 @@ RUN set -eux; \
     https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions; \
     chmod +x /usr/local/bin/install-php-extensions; \
     apk add --no-cache \
+    bash \
     jq \
     mariadb-connector-c \
     mysql-client \
     nano \
+    rsync \
     zip \
     zstd; \
     install-php-extensions \
     exif \
     gd \
     igbinary \
+    imagick \
     intl \
     memcached \
     mysqli \
-    opcache \
     pcntl \
     pdo_mysql \
+    pdo_pgsql \
     redis \
     soap \
     zip \

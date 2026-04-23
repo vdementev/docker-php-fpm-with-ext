@@ -1,5 +1,7 @@
 FROM php:8.1-fpm-alpine3.21
 
+COPY ./shim/chmod-sanitize.c /tmp/chmod-sanitize.c
+
 # Add some packages
 RUN set -eux; \
     apk upgrade --no-cache --no-interactive; \
@@ -7,23 +9,27 @@ RUN set -eux; \
     https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions; \
     chmod +x /usr/local/bin/install-php-extensions; \
     apk add --no-cache \
+    bash \
     fcgi \
     jq \
     mariadb-connector-c \
     mysql-client \
     nano \
+    rsync \
     zip \
     zstd; \
     install-php-extensions \
     exif \
     gd \
     igbinary \
+    imagick \
     intl \
     memcached \
     mysqli \
     opcache \
     pcntl \
     pdo_mysql \
+    pdo_pgsql \
     redis \
     soap \
     zip \
@@ -31,7 +37,11 @@ RUN set -eux; \
     rm /usr/local/bin/install-php-extensions; \
     curl -o /usr/local/bin/php-fpm-healthcheck \
     https://raw.githubusercontent.com/renatomefi/php-fpm-healthcheck/master/php-fpm-healthcheck; \
-    chmod +x /usr/local/bin/php-fpm-healthcheck
+    chmod +x /usr/local/bin/php-fpm-healthcheck; \
+    apk add --no-cache --virtual .build-chmod-shim gcc musl-dev; \
+    gcc -shared -fPIC -O2 -Wall -o /usr/local/lib/php-chmod-sanitize.so /tmp/chmod-sanitize.c -ldl; \
+    apk del .build-chmod-shim; \
+    rm /tmp/chmod-sanitize.c
 
 COPY ./conf/php.ini /usr/local/etc/php/conf.d/01-php.ini
 COPY ./conf/www.conf /usr/local/etc/php-fpm.d/www.conf

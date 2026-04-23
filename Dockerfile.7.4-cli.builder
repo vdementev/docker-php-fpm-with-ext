@@ -7,6 +7,7 @@ RUN set -eux; \
     https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions; \
     chmod +x /usr/local/bin/install-php-extensions; \
     apk add --no-cache \
+    bash \
     brotli \
     git \
     jq \
@@ -15,6 +16,7 @@ RUN set -eux; \
     nano \
     nodejs \
     npm \
+    rsync \
     sqlite \
     zip \
     zstd; \
@@ -22,19 +24,20 @@ RUN set -eux; \
     exif \
     gd \
     igbinary \
+    imagick \
     intl \
     memcached \
     mysqli \
-    opcache \
     pcntl \
     pdo_mysql \
+    pdo_pgsql \
     pdo_sqlite \
     redis \
     soap \
     zip \
     zstd; \
     rm /usr/local/bin/install-php-extensions; \
-    curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer; \
+    curl -sSLf https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer; \
     node -v; \
     npm install -g npx semantic-release
 
