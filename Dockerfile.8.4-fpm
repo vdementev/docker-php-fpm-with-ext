@@ -1,23 +1,29 @@
-FROM php:8.4-fpm-alpine3.23
-
-COPY ./shim/chmod-sanitize.c /tmp/chmod-sanitize.c
-
-# Add some packages
+FROM debian:trixie-slim AS shim-builder
 RUN set -eux; \
-    apk upgrade --no-cache --no-interactive; \
-    curl -sSLf -o /usr/local/bin/install-php-extensions \
-    https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions; \
-    chmod +x /usr/local/bin/install-php-extensions; \
-    apk add --no-cache \
-    bash \
-    fcgi \
+    apt-get update; \
+    apt-get install -y --no-install-recommends gcc libc6-dev; \
+    rm -rf /var/lib/apt/lists/*
+COPY ./shim/chmod-sanitize.c /tmp/chmod-sanitize.c
+RUN gcc -shared -fPIC -O2 -Wall -o /tmp/php-chmod-sanitize.so /tmp/chmod-sanitize.c -ldl
+
+FROM php:8.4-fpm-trixie
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+RUN set -eux; \
+    apt-get update; \
+    apt-get upgrade -y; \
+    apt-get install -y --no-install-recommends \
     jq \
-    mariadb-connector-c \
-    mysql-client \
+    libfcgi-bin \
+    mariadb-client \
     nano \
     rsync \
     zip \
     zstd; \
+    curl -sSLf -o /usr/local/bin/install-php-extensions \
+    https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions; \
+    chmod +x /usr/local/bin/install-php-extensions; \
     install-php-extensions \
     exif \
     gd \
@@ -35,13 +41,13 @@ RUN set -eux; \
     zip \
     zstd; \
     rm /usr/local/bin/install-php-extensions; \
-    curl -o /usr/local/bin/php-fpm-healthcheck \
+    curl -sSLf -o /usr/local/bin/php-fpm-healthcheck \
     https://raw.githubusercontent.com/renatomefi/php-fpm-healthcheck/master/php-fpm-healthcheck; \
     chmod +x /usr/local/bin/php-fpm-healthcheck; \
-    apk add --no-cache --virtual .build-chmod-shim gcc musl-dev; \
-    gcc -shared -fPIC -O2 -Wall -o /usr/local/lib/php-chmod-sanitize.so /tmp/chmod-sanitize.c -ldl; \
-    apk del .build-chmod-shim; \
-    rm /tmp/chmod-sanitize.c
+    apt-get clean; \
+    rm -rf /var/lib/apt/lists/*
+
+COPY --from=shim-builder /tmp/php-chmod-sanitize.so /usr/local/lib/php-chmod-sanitize.so
 
 COPY ./conf/php.ini /usr/local/etc/php/conf.d/01-php.ini
 COPY ./conf/www.conf /usr/local/etc/php-fpm.d/www.conf

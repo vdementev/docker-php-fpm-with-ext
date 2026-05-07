@@ -1,25 +1,25 @@
-FROM php:8.5-cli-alpine3.23
+FROM php:8.5-cli-trixie
 
-# Add some packages
+ENV DEBIAN_FRONTEND=noninteractive
+
 RUN set -eux; \
-    apk upgrade --no-cache --no-interactive; \
-    curl -sSLf -o /usr/local/bin/install-php-extensions \
-    https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions; \
-    chmod +x /usr/local/bin/install-php-extensions; \
-    apk add --no-cache \
-    bash \
+    apt-get update; \
+    apt-get upgrade -y; \
+    apt-get install -y --no-install-recommends \
     brotli \
     git \
     jq \
-    mariadb-connector-c \
-    mysql-client \
+    mariadb-client \
     nano \
     nodejs \
     npm \
     rsync \
-    sqlite \
+    sqlite3 \
     zip \
     zstd; \
+    curl -sSLf -o /usr/local/bin/install-php-extensions \
+    https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions; \
+    chmod +x /usr/local/bin/install-php-extensions; \
     install-php-extensions \
     exif \
     gd \
@@ -39,7 +39,10 @@ RUN set -eux; \
     rm /usr/local/bin/install-php-extensions; \
     curl -sSLf https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer; \
     node -v; \
-    npm install -g npx semantic-release
+    npm install -g npx semantic-release; \
+    npm cache clean --force; \
+    apt-get clean; \
+    rm -rf /var/lib/apt/lists/*
 
 COPY ./conf/php-builder.ini /usr/local/etc/php/conf.d/01-php.ini
 
