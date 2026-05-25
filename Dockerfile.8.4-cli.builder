@@ -1,3 +1,4 @@
+# syntax=docker/dockerfile:1.6
 FROM php:8.4-cli-trixie
 
 ENV DEBIAN_FRONTEND=noninteractive

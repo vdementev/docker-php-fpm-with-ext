@@ -1,3 +1,4 @@
+# syntax=docker/dockerfile:1.6
 FROM php:7.4-cli-alpine3.16
 
 # Add some packages

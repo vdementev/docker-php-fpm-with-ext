@@ -1,3 +1,4 @@
+# syntax=docker/dockerfile:1.6
 FROM debian:trixie-slim AS shim-builder
 RUN set -eux; \
     apt-get update; \
@@ -53,6 +54,8 @@ COPY ./conf/php.ini /usr/local/etc/php/conf.d/01-php.ini
 COPY ./conf/www.conf /usr/local/etc/php-fpm.d/www.conf
 
 HEALTHCHECK --interval=5s --timeout=1s --start-period=3s --retries=3 CMD php-fpm-healthcheck || exit 1
+
+STOPSIGNAL SIGQUIT
 
 USER www-data
 
