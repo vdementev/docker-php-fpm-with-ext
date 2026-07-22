@@ -24,5 +24,3 @@ Notes:
 - `LD_PRELOAD` applies to every process in the container (PHP-FPM workers, CLI, composer), so any genuine `chmod($x, 0)` anywhere will also be rewritten. For PrestaShop deployments this is the desired behavior.
 - Only the FPM image variants ship the shim. CLI/CLI-builder variants do not.
 - The shim masks the bug rather than fixing it — keep an eye on upstream PS fixes.
-
-bump
