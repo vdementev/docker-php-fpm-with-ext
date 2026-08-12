@@ -1,0 +1,100 @@
+name: ci
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - dockerfile: Dockerfile.7.0-fpm
+            version: "7.0"
+            flavor: "fpm"
+          - dockerfile: Dockerfile.7.1-fpm
+            version: "7.1"
+            flavor: "fpm"
+          - dockerfile: Dockerfile.7.2-fpm
+            version: "7.2"
+            flavor: "fpm"
+          - dockerfile: Dockerfile.7.3-fpm
+            version: "7.3"
+            flavor: "fpm"
+          - dockerfile: Dockerfile.7.4-cli.builder
+            version: "7.4"
+            flavor: "cli-builder"
+          - dockerfile: Dockerfile.7.4-fpm
+            version: "7.4"
+            flavor: "fpm"
+          - dockerfile: Dockerfile.8.0-fpm
+            version: "8.0"
+            flavor: "fpm"
+          - dockerfile: Dockerfile.8.1-fpm
+            version: "8.1"
+            flavor: "fpm"
+          - dockerfile: Dockerfile.8.2-fpm
+            version: "8.2"
+            flavor: "fpm"
+          - dockerfile: Dockerfile.8.3-cli.builder
+            version: "8.3"
+            flavor: "cli-builder"
+          - dockerfile: Dockerfile.8.3-cli
+            version: "8.3"
+            flavor: "cli"
+          - dockerfile: Dockerfile.8.3-fpm
+            version: "8.3"
+            flavor: "fpm"
+          - dockerfile: Dockerfile.8.4-cli.builder
+            version: "8.4"
+            flavor: "cli-builder"
+          - dockerfile: Dockerfile.8.4-cli
+            version: "8.4"
+            flavor: "cli"
+          - dockerfile: Dockerfile.8.4-fpm
+            version: "8.4"
+            flavor: "fpm"
+          - dockerfile: Dockerfile.8.5-cli.builder
+            version: "8.5"
+            flavor: "cli-builder"
+          - dockerfile: Dockerfile.8.5-cli
+            version: "8.5"
+            flavor: "cli"
+          - dockerfile: Dockerfile.8.5-fpm
+            version: "8.5"
+            flavor: "fpm"
+    uses: vdementev/docker-workflows/.github/workflows/build-image.yml@v1
+    permissions:
+      contents: read
+      id-token: write
+    with:
+      image: php-fpm-with-ext
+      dockerfile: ${{ matrix.dockerfile }}
+      cache-scope: ${{ matrix.version }}-${{ matrix.flavor }}
+      timeout-minutes: 90
+      push: ${{ github.event_name != 'pull_request' }}
+      tags: |
+        type=raw,value=${{ matrix.version }}-${{ matrix.flavor }}
+      labels: |
+        org.opencontainers.image.title=php-fpm-with-ext (${{ matrix.version }}-${{ matrix.flavor }})
+        org.opencontainers.image.description=PHP ${{ matrix.version }} ${{ matrix.flavor }} image with common extensions preinstalled and the PrestaShop chmod(0) LD_PRELOAD shim.
+        org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
+        org.opencontainers.image.revision=${{ github.sha }}
+        org.opencontainers.image.licenses=MIT
+    secrets: inherit
+
+  sync-description:
+    if: github.event_name != 'pull_request'
+    needs: build
+    uses: vdementev/docker-workflows/.github/workflows/sync-description.yml@v1
+    with:
+      image: php-fpm-with-ext
+      short-description: "PHP-FPM / CLI images with common extensions and PrestaShop chmod(0) shim. PHP 7.0–8.5."
+    secrets: inherit

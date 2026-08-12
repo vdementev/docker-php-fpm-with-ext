@@ -1,0 +1,8 @@
+# npm CLI bundled dependencies in cli-builder images (Debian trixie npm package).
+# Not runtime-exposed: npm is CI tooling only in builder images; no fixed Debian
+# package available yet. Revisit when trixie updates npm.
+# brace-expansion (npm bundled)
+CVE-2026-14257
+CVE-2026-69152
+# ip-address (npm bundled)
+CVE-2026-69192
