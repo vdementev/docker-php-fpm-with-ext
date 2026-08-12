@@ -40,7 +40,7 @@ RUN set -eux; \
     rm /usr/local/bin/install-php-extensions; \
     curl -sSLf https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer; \
     node -v; \
-    npm install -g npx semantic-release
+    npm install -g semantic-release@19
 
 COPY ./conf/php7.ini /usr/local/etc/php/conf.d/01-php.ini
 COPY ./conf/www.conf /usr/local/etc/php-fpm.d/www.conf
