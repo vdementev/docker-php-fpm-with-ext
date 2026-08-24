@@ -22,6 +22,7 @@ RUN set -eux; \
     zip \
     zstd; \
     install-php-extensions \
+    bcmath \
     exif \
     gd \
     igbinary \
