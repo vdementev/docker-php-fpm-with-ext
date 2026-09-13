@@ -41,17 +41,26 @@ cosign verify dementev/php-fpm-with-ext:8.5-fpm \
   consistent extension set: exif, gd, igbinary, imagick, intl,
   memcached, mysqli, opcache, pcntl, pdo_mysql, pdo_pgsql, redis, soap,
   zip, zstd.
-- **php-fpm-healthcheck** (renatomefi) wired up as a Docker
-  `HEALTHCHECK` against the FPM status socket.
+- **`fpm-health`** wired up as a Docker `HEALTHCHECK`: it wraps
+  php-fpm-healthcheck (renatomefi), requires a real status page back
+  rather than just an open socket, and walks every pool listed in
+  `FPM_HEALTH_PORTS` (comma-separated, default `9000`) so a container
+  running more than one pool reports unhealthy when any of them dies.
+  `pm.status_path = /status` and `ping.path = /ping` are set in the
+  bundled `www.conf` — a replacement `www.conf` has to keep
+  `pm.status_path`, or the healthcheck will (correctly) fail.
 - **`STOPSIGNAL SIGQUIT`** so `docker stop` triggers FPM's graceful
   worker drain instead of an immediate `SIGTERM` kill.
-- Tools: `jq`, `mariadb-client`, `nano`, `rsync`, `zip`, `zstd`,
-  `fcgi`/`libfcgi-bin` (for the healthcheck binary).
+- Tools: `jq`, `less`, `mariadb-client`, `nano`, `procps`, `rsync`,
+  `unzip`, `zip`, `zstd`, `fcgi`/`libfcgi-bin` (for the healthcheck
+  binary). `unzip` is a separate package from `zip` — deploy scripts
+  that shell out to it need both.
 - Runs as `www-data` by default. `WORKDIR /app`.
 
 ## What's inside (CLI / CLI-builder)
 
 - `cli`: same extension set as FPM, minus the FPM healthcheck and shim.
+  Adds `git` on top of the FPM tool list.
 - `cli-builder`: adds `git`, `composer`, `node`, `npm`,
   `semantic-release`, `brotli`, `sqlite3`, `pdo_sqlite` for CI usage.
 - Default `CMD ["sh"]` on `cli-builder`. Runs as `www-data`.
@@ -96,6 +105,19 @@ COPY www.conf  /usr/local/etc/php-fpm.d/www.conf
 ```
 
 `01-php.ini` is the image-default; anything in `99-*.ini` overrides it.
+
+Defaults worth knowing before you override them:
+
+- `disable_functions` blocks the process-spawning family as a whole
+  (`exec`, `shell_exec`, `passthru`, `system`, `popen`, `proc_*`,
+  `pcntl_exec`) plus `dl`, `show_source`/`highlight_file`. It does *not*
+  block `getmypid`/`getmyuid`/`diskfreespace` — those break real
+  libraries and blocked nothing (`posix_getpid`, `disk_free_space`).
+  The `cli-builder` images set no `disable_functions` at all, since
+  composer and npm need to spawn processes.
+- OPcache follows PrestaShop's tuning guide, with
+  `max_accelerated_files = 32531`, `enable_file_override = 0` and JIT
+  off (`opcache.jit = disable`, `jit_buffer_size = 0`).
 
 ## Source
 

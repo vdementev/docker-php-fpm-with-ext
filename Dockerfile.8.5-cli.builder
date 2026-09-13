@@ -10,12 +10,15 @@ RUN set -eux; \
     brotli \
     git \
     jq \
+    less \
     mariadb-client \
     nano \
+    procps \
     nodejs \
     npm \
     rsync \
     sqlite3 \
+    unzip \
     zip \
     zstd; \
     curl -sSLf -o /usr/local/bin/install-php-extensions \

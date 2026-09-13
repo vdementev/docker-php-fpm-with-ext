@@ -48,7 +48,9 @@ RUN set -eux; \
 COPY ./conf/php7.ini /usr/local/etc/php/conf.d/01-php.ini
 COPY ./conf/www.conf /usr/local/etc/php-fpm.d/www.conf
 
-HEALTHCHECK --interval=5s --timeout=1s --start-period=3s --retries=3 CMD php-fpm-healthcheck || exit 1
+COPY ./bin/fpm-health /usr/local/bin/fpm-health
+
+HEALTHCHECK --interval=5s --timeout=3s --start-period=3s --retries=3 CMD fpm-health || exit 1
 
 STOPSIGNAL SIGQUIT
 

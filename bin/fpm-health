@@ -1,0 +1,24 @@
+#!/bin/sh
+# Healthcheck covering every FPM pool in the container.
+#
+# php-fpm-healthcheck on its own exits 0 even when there is no status page to
+# read: it strips the FastCGI response headers with `tail -n +5`, which also
+# strips the "File not found." body it checks for. All it ever proved was that
+# the socket answered. Require a real status page back instead, and walk every
+# pool port rather than only the first.
+#
+# FPM_HEALTH_PORTS  comma-separated pool ports to check (default: 9000)
+# FPM_HEALTH_HOST   host the pools listen on       (default: localhost)
+set -eu
+
+for port in $(echo "${FPM_HEALTH_PORTS:-9000}" | tr ',' ' '); do
+    if ! status=$(FCGI_CONNECT="${FPM_HEALTH_HOST:-localhost}:${port}" php-fpm-healthcheck -v 2>&1); then
+        echo "${status}" >&2
+        exit 1
+    fi
+
+    if ! echo "${status}" | grep -q '^pool:'; then
+        echo "no php-fpm status page on port ${port} — is pm.status_path set?" >&2
+        exit 1
+    fi
+done
