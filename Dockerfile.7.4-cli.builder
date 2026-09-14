@@ -1,6 +1,14 @@
 # syntax=docker/dockerfile:1.6
 FROM php:7.4-cli-alpine3.16
 
+# This variant is published unpatched, on purpose. See SUPPORT.md.
+LABEL com.lotuswebagency.support="end-of-life" \
+      com.lotuswebagency.eol-date="2022-11-28" \
+      com.lotuswebagency.rebuildable="false" \
+      com.lotuswebagency.upgrade-to="8.4-fpm" \
+      org.opencontainers.image.documentation="https://github.com/vdementev/docker-php-fpm-with-ext/blob/main/SUPPORT.md" \
+      com.lotuswebagency.support-note="PHP 7.4 reached end of life on 2022-11-28 and receives no upstream security fixes. Published for legacy applications being migrated; see SUPPORT.md. PECL no longer serves extension sources for this version, so this variant builds from cache only."
+
 # Add some packages
 RUN set -eux; \
     apk upgrade --no-cache -q; \

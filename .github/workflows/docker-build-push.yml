@@ -34,27 +34,35 @@ jobs:
           - dockerfile: Dockerfile.7.0-fpm
             version: "7.0"
             flavor: "fpm"
+            eol: "2019-01-10"
           - dockerfile: Dockerfile.7.1-fpm
             version: "7.1"
             flavor: "fpm"
+            eol: "2019-12-01"
           - dockerfile: Dockerfile.7.2-fpm
             version: "7.2"
             flavor: "fpm"
+            eol: "2020-11-30"
           - dockerfile: Dockerfile.7.3-fpm
             version: "7.3"
             flavor: "fpm"
+            eol: "2021-12-06"
           - dockerfile: Dockerfile.7.4-cli.builder
             version: "7.4"
             flavor: "cli-builder"
+            eol: "2022-11-28"
           - dockerfile: Dockerfile.7.4-fpm
             version: "7.4"
             flavor: "fpm"
+            eol: "2022-11-28"
           - dockerfile: Dockerfile.8.0-fpm
             version: "8.0"
             flavor: "fpm"
+            eol: "2023-11-26"
           - dockerfile: Dockerfile.8.1-fpm
             version: "8.1"
             flavor: "fpm"
+            eol: "2025-12-31"
           - dockerfile: Dockerfile.8.2-fpm
             version: "8.2"
             flavor: "fpm"
@@ -88,37 +96,41 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Log in to Docker Hub
-        uses: docker/login-action@v4
+        uses: docker/login-action@dbcb813823bdd20940b903addbd779551569679f # v4.6.0
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Set up QEMU
-        uses: docker/setup-qemu-action@v4
+        uses: docker/setup-qemu-action@1f40c72289eff860ee54a304f1438e3cff362e0a # v4.3.0
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v4
+        uses: docker/setup-buildx-action@37fe631027851001ddb9b187196cc803df7f5f0e # v4.3.0
 
       - name: Extract metadata (tags, labels) for Docker
         id: meta
-        uses: docker/metadata-action@v6
+        uses: docker/metadata-action@dc802804100637a589fabce1cb79ff13a1411302 # v6.2.0
         with:
           images: ${{ env.IMAGE_REPO }}
           tags: |
             type=raw,value=${{ matrix.version }}-${{ matrix.flavor }}
           labels: |
             org.opencontainers.image.title=php-fpm-with-ext (${{ matrix.version }}-${{ matrix.flavor }})
-            org.opencontainers.image.description=PHP ${{ matrix.version }} ${{ matrix.flavor }} image with common extensions preinstalled and the PrestaShop chmod(0) LD_PRELOAD shim.
+            org.opencontainers.image.description=PHP ${{ matrix.version }} ${{ matrix.flavor }} image with common extensions preinstalled and the PrestaShop chmod(0) LD_PRELOAD shim.${{ matrix.eol && format(' END OF LIFE — PHP {0} stopped receiving upstream security fixes on {1} and this image is published unpatched; see SUPPORT.md.', matrix.version, matrix.eol) || '' }}
+            org.opencontainers.image.url=https://hub.docker.com/r/dementev/php-fpm-with-ext
+            org.opencontainers.image.documentation=${{ github.server_url }}/${{ github.repository }}#readme
+            org.opencontainers.image.vendor=Lotus Web Agency
+            org.opencontainers.image.authors=Vasilii Dementev https://vasiliidementev.com
             org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
             org.opencontainers.image.revision=${{ github.sha }}
             org.opencontainers.image.licenses=MIT
 
       - name: Build & push ${{ matrix.version }}-${{ matrix.flavor }}
         id: build
-        uses: docker/build-push-action@v7
+        uses: docker/build-push-action@53b7df96c91f9c12dcc8a07bcb9ccacbed38856a # v7.3.0
         with:
           context: .
           file: ${{ matrix.dockerfile }}
@@ -132,7 +144,7 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
 
       - name: Install Cosign
-        uses: sigstore/cosign-installer@v4.1.1
+        uses: sigstore/cosign-installer@6f9f17788090df1f26f669e9d70d6ae9567deba6 # v4.1.2
 
       - name: Sign image with Cosign (keyless)
         env:
@@ -151,10 +163,10 @@ jobs:
     if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Sync Docker Hub description
-        uses: peter-evans/dockerhub-description@v5
+        uses: peter-evans/dockerhub-description@1b9a80c056b620d92cedb9d9b5a223409c68ddfa # v5.0.0
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
