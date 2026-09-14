@@ -1,29 +1,28 @@
-# php-fpm-with-ext — PHP-FPM / CLI with common extensions
+# php-fpm-with-ext — PHP-FPM / CLI with the extensions preinstalled
 
-PHP-FPM and PHP-CLI images for **development and personal use**,
-pre-loaded with the extensions most projects reach for (gd, intl,
-imagick, redis, memcached, pdo_mysql, pdo_pgsql, opcache, soap, zip,
-zstd, …) and a small `LD_PRELOAD` shim that papers over the PrestaShop
+PHP-FPM and PHP-CLI images with the extensions most PHP projects actually reach
+for already compiled in (gd, intl, imagick, redis, memcached, pdo_mysql,
+pdo_pgsql, opcache, soap, zip, zstd, …), a healthcheck that verifies the pool
+rather than the socket, and a small `LD_PRELOAD` shim for the PrestaShop
 `chmod(0)` cache bug.
 
-Defaults are generous (long `max_execution_time`, big `memory_limit`,
-verbose error reporting) — drop your own `.ini` at
-`/usr/local/etc/php/conf.d/99-php.ini` to override anything in
-production.
+Defaults are sized for PrestaShop-class applications — 1 GB `memory_limit`, long
+`max_execution_time`, large uploads. Drop your own `.ini` at
+`/usr/local/etc/php/conf.d/99-php.ini` to override anything.
 
 ## Tags
 
-Each tag is `{version}-{flavor}`:
+`{version}-{flavor}`. There is no `latest`: a PHP image whose tag doesn't name
+the version is a trap.
 
-| Flavor        | What it's for                                             | PHP versions       |
-|---------------|-----------------------------------------------------------|--------------------|
-| `fpm`         | PHP-FPM behind a reverse proxy (nginx/Angie/Caddy).       | 7.0 – 8.5          |
-| `cli`         | One-shot PHP CLI for cron jobs, queue workers, scripts.   | 8.3, 8.4, 8.5      |
-| `cli-builder` | CI/build environment: CLI + git, composer, node, npm, brotli, sqlite3. | 7.4, 8.3, 8.4, 8.5 |
+| Flavor | What it's for | PHP versions |
+|---|---|---|
+| `fpm` | PHP-FPM behind a reverse proxy (nginx / Angie / Caddy) | 7.0 – 8.5 |
+| `cli` | One-shot PHP CLI for cron jobs, queue workers, scripts | 8.3, 8.4, 8.5 |
+| `cli-builder` | Build stage: CLI + git, composer, node, npm, brotli, sqlite3 | 7.4, 8.3, 8.4, 8.5 |
 
-Multi-arch: `linux/amd64`, `linux/arm64`. SBOM and max-mode build
-provenance attached to every image. Images are signed with Cosign
-(keyless, OIDC-bound to this repo) — verify with:
+Multi-arch: `linux/amd64`, `linux/arm64`. Every image carries an SBOM, max-mode
+build provenance and a keyless Cosign signature:
 
 ```
 cosign verify dementev/php-fpm-with-ext:8.5-fpm \
@@ -31,9 +30,12 @@ cosign verify dementev/php-fpm-with-ext:8.5-fpm \
   --certificate-oidc-issuer https://token.actions.githubusercontent.com
 ```
 
-> EOL PHP versions (7.0 – 8.0) are still built for legacy projects, but
-> their base images no longer receive security patches. Use them
-> behind a strict proxy and only when you have no choice.
+> **PHP 8.1 and older are end of life upstream** and are published here
+> unpatched, on purpose, for legacy applications being migrated rather than
+> rewritten. `7.0` – `8.0` are frozen: PECL no longer serves extension sources
+> for them, so those tags keep working but cannot be rebuilt from scratch. The
+> full matrix and what "supported" means for each row is in
+> [SUPPORT.md](https://github.com/vdementev/docker-php-fpm-with-ext/blob/main/SUPPORT.md).
 
 ## What's inside (FPM)
 
@@ -119,6 +121,40 @@ Defaults worth knowing before you override them:
   `max_accelerated_files = 32531`, `enable_file_override = 0` and JIT
   off (`opcache.jit = disable`, `jit_buffer_size = 0`).
 
-## Source
+## Security
 
-[github.com/vdementev/docker-php-fpm-with-ext](https://github.com/vdementev/docker-php-fpm-with-ext) · MIT license
+Published digests are signed and carry an SBOM and build provenance. This
+repository has not yet moved to the shared PR-gated pipeline with a Trivy scan
+gate that the other `dementev/*` images use — a push to `main` publishes
+directly. That gap is stated rather than glossed over; see
+[SECURITY.md](https://github.com/vdementev/docker-php-fpm-with-ext/blob/main/SECURITY.md)
+for the reporting channel and response targets.
+
+## Related images
+
+One family, built by the same pipeline, meant to run together — a proxy in
+front, an app runtime, a database, and a way into it.
+
+| Image | What it does |
+|---|---|
+| [`dementev/angie`](https://hub.docker.com/r/dementev/angie) — [source](https://github.com/vdementev/angie-docker) | Public-facing reverse proxy and TLS terminator — Angie, the nginx fork, with brotli, zstd and cache-purge |
+| [`dementev/nginx`](https://hub.docker.com/r/dementev/nginx) — [source](https://github.com/vdementev/nginx-docker) | Static sites and SPAs behind that proxy — brotli/zstd siblings, Prometheus stub_status |
+| **[`dementev/php-fpm-with-ext`](https://hub.docker.com/r/dementev/php-fpm-with-ext)** — this image | PHP-FPM and CLI, PHP 7.0 → 8.5, with the extensions most projects reach for |
+| [`dementev/mysql-percona`](https://hub.docker.com/r/dementev/mysql-percona) — [source](https://github.com/vdementev/mysql-percona-docker) | Percona Server for MySQL 8.4 LTS, XtraBackup built in, no root inside |
+| [`dementev/adminer`](https://hub.docker.com/r/dementev/adminer) — [source](https://github.com/vdementev/adminer-docker) | Adminer 6 with every driver it supports, for reaching any of the above |
+
+## Maintainer
+
+Built and maintained by [Vasilii Dementev](https://vasiliidementev.com) at
+[Lotus Web Agency](https://lotuswebagency.com). These images are not a side
+project — they are the base layer under the client and product systems we run,
+which is why they are gated, tested and signed rather than pushed by hand.
+
+Issues and pull requests:
+[github.com/vdementev/docker-php-fpm-with-ext](https://github.com/vdementev/docker-php-fpm-with-ext).
+Need this kind of infrastructure built or maintained for your own stack?
+[lotuswebagency.com](https://lotuswebagency.com).
+
+Packaging in this repository is MIT licensed — see
+[LICENSE](https://github.com/vdementev/docker-php-fpm-with-ext/blob/main/LICENSE). The software
+inside the image keeps its own upstream licenses.

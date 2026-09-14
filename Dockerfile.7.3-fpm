@@ -1,6 +1,14 @@
 # syntax=docker/dockerfile:1.6
 FROM php:7.3-fpm-alpine3.15
 
+# This variant is published unpatched, on purpose. See SUPPORT.md.
+LABEL com.lotuswebagency.support="end-of-life" \
+      com.lotuswebagency.eol-date="2021-12-06" \
+      com.lotuswebagency.rebuildable="false" \
+      com.lotuswebagency.upgrade-to="8.4-fpm" \
+      org.opencontainers.image.documentation="https://github.com/vdementev/docker-php-fpm-with-ext/blob/main/SUPPORT.md" \
+      com.lotuswebagency.support-note="PHP 7.3 reached end of life on 2021-12-06 and receives no upstream security fixes. Published for legacy applications being migrated; see SUPPORT.md. PECL no longer serves extension sources for this version, so this variant builds from cache only."
+
 COPY ./shim/chmod-sanitize.c /tmp/chmod-sanitize.c
 
 # Add some packages

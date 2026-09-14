@@ -9,6 +9,13 @@ RUN gcc -shared -fPIC -O2 -Wall -o /tmp/php-chmod-sanitize.so /tmp/chmod-sanitiz
 
 FROM php:8.1-fpm-trixie
 
+# This variant is published unpatched, on purpose. See SUPPORT.md.
+LABEL com.lotuswebagency.support="end-of-life" \
+      com.lotuswebagency.eol-date="2025-12-31" \
+      com.lotuswebagency.upgrade-to="8.4-fpm" \
+      org.opencontainers.image.documentation="https://github.com/vdementev/docker-php-fpm-with-ext/blob/main/SUPPORT.md" \
+      com.lotuswebagency.support-note="PHP 8.1 reached end of life on 2025-12-31 and receives no upstream security fixes. Published for legacy applications being migrated; see SUPPORT.md."
+
 ENV DEBIAN_FRONTEND=noninteractive
 
 RUN set -eux; \
