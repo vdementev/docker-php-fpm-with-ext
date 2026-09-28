@@ -25,7 +25,7 @@ name the version is a trap.
 |---|---|---|
 | `fpm` | PHP-FPM on `:9000`, behind nginx / Angie / Caddy | 7.0 – 8.5 |
 | `cli` | One-shot CLI for cron jobs, queue workers, scripts | 8.3, 8.4, 8.5 |
-| `cli-builder` | Build stage: CLI plus git, composer, node, npm, brotli, sqlite3 | 7.4, 8.3, 8.4, 8.5 |
+| `cli-builder` | Build stage: CLI plus git, composer, Node 24 LTS (7.4: Alpine's node), brotli, sqlite3 | 7.4, 8.3, 8.4, 8.5 |
 
 PHP 8.1 and older are end of life upstream and are published unpatched, on
 purpose, for legacy applications that are being migrated rather than rewritten.
@@ -48,7 +48,8 @@ and do not get.
 - The PrestaShop `chmod(0)` shim, available but not enabled — see below.
 
 The CLI images carry the same extension set (minus opcache in the CLI SAPI) and
-add `git`. The `cli-builder` images add composer, node, npm, semantic-release,
+add `git`. The `cli-builder` images add composer, Node 24 LTS (with its bundled
+npm, npx and corepack; 7.4 keeps Alpine 3.16's `nodejs`), semantic-release,
 brotli and sqlite3, and set no `disable_functions` — composer and npm have to be
 able to spawn processes.
 

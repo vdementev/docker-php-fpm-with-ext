@@ -19,7 +19,7 @@ the version is a trap.
 |---|---|---|
 | `fpm` | PHP-FPM behind a reverse proxy (nginx / Angie / Caddy) | 7.0 – 8.5 |
 | `cli` | One-shot PHP CLI for cron jobs, queue workers, scripts | 8.3, 8.4, 8.5 |
-| `cli-builder` | Build stage: CLI + git, composer, node, npm, brotli, sqlite3 | 7.4, 8.3, 8.4, 8.5 |
+| `cli-builder` | Build stage: CLI + git, composer, Node 24 LTS (7.4: Alpine's node), brotli, sqlite3 | 7.4, 8.3, 8.4, 8.5 |
 
 Multi-arch: `linux/amd64`, `linux/arm64`. Every image carries an SBOM, max-mode
 build provenance and a keyless Cosign signature:
@@ -63,8 +63,9 @@ cosign verify dementev/php-fpm-with-ext:8.5-fpm \
 
 - `cli`: same extension set as FPM, minus the FPM healthcheck and shim.
   Adds `git` on top of the FPM tool list.
-- `cli-builder`: adds `git`, `composer`, `node`, `npm`,
-  `semantic-release`, `brotli`, `sqlite3`, `pdo_sqlite` for CI usage.
+- `cli-builder`: adds `git`, `composer`, Node 24 LTS (bundled npm, npx,
+  corepack; 7.4 keeps the Alpine 3.16 `nodejs` package, which Node 24 cannot
+  run on), `semantic-release`, `brotli`, `sqlite3`, `pdo_sqlite` for CI usage.
 - Default `CMD ["sh"]` on `cli-builder`. Runs as `www-data`.
 
 ## PrestaShop `chmod(0)` shim
