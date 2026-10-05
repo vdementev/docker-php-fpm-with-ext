@@ -98,6 +98,20 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
+      - name: Cache scope
+        # A warm GHA cache serves the apt-get upgrade / extension layer unchanged
+        # until the base image moves, so a rebuild can republish stale packages.
+        # Rotating the scope daily forces a fresh install. Images labeled
+        # rebuildable=false keep their fixed scope: PECL no longer serves their
+        # extensions, so that cache is the only way they still build.
+        run: |
+          set -euo pipefail
+          scope="${{ matrix.version }}-${{ matrix.flavor }}"
+          if ! grep -q 'rebuildable="false"' "${{ matrix.dockerfile }}"; then
+            scope="$scope-$(date -u +%Y%m%d)"
+          fi
+          echo "CACHE_SCOPE=$scope" >> "$GITHUB_ENV"
+
       - name: Log in to Docker Hub
         uses: docker/login-action@dbcb813823bdd20940b903addbd779551569679f # v4.6.0
         with:
@@ -138,8 +152,8 @@ jobs:
           push: true
           sbom: true
           provenance: mode=max
-          cache-from: type=gha,scope=${{ matrix.version }}-${{ matrix.flavor }}
-          cache-to: type=gha,mode=max,scope=${{ matrix.version }}-${{ matrix.flavor }}
+          cache-from: type=gha,scope=${{ env.CACHE_SCOPE }}
+          cache-to: type=gha,mode=max,scope=${{ env.CACHE_SCOPE }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
 
