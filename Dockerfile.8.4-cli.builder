@@ -1,4 +1,4 @@
-# syntax=docker/dockerfile:1.6
+# syntax=docker/dockerfile:1.28
 FROM node:24-trixie-slim AS node
 
 FROM php:8.4-cli-trixie

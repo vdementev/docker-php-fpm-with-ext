@@ -1,4 +1,4 @@
-# syntax=docker/dockerfile:1.6
+# syntax=docker/dockerfile:1.28
 FROM debian:trixie-slim AS shim-builder
 RUN set -eux; \
     apt-get update; \
